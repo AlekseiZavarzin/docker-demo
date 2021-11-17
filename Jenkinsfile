@@ -1,14 +1,13 @@
 pipeline{
 	agent any
 	environment{
-        DOCKERHUB_USERNAME="alexzavr"
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
 	}
 
 	stages {
 		stage('Build') {
 			steps {
-				sh 'docker build -t $DOCKERHUB_USERNAME/petclinic-demo .'
+				sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/petclinic-demo .'
 			}
 		}
 		stage('Login') {
@@ -18,7 +17,7 @@ pipeline{
 		}
 		stage('Push') {
 			steps {
-				sh 'docker push $DOCKERHUB_USERNAME/petclinic-demo'
+				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/petclinic-demo'
 			}
 		}
 	}
