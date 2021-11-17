@@ -1,13 +1,9 @@
-FROM maven:3.6.0-jdk-11-slim AS base
+FROM maven:3.6.0-jdk-11-slim AS build
 WORKDIR /app
 
 COPY ./ ./
 
-FROM base AS test
-RUN mvn test
-
-FROM base AS build
-RUN mvn package
+RUN mvn clean package
 
 FROM openjdk:11-jre-slim AS prod
 EXPOSE 8080
