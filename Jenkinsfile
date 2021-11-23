@@ -1,34 +1,3 @@
-// pipeline{
-// 	agent any
-// 	environment{
-// 		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
-// 	}
-
-// 	stages {
-// 		stage('Build') {
-// 			steps {
-// 				sh 'docker build -t $DOCKERHUB_CREDENTIALS_USR/petclinic-demo .'
-// 			}
-// 		}
-// 		stage('Login') {
-// 			steps {
-// 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-// 			}
-// 		}
-// 		stage('Push') {
-// 			steps {
-// 				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/petclinic-demo'
-// 			}
-// 		}
-// 	}
-
-// 	post {
-// 		always {
-// 			sh 'docker logout'
-// 		}
-// 	}
-// }
-
 def withDockerNetwork(Closure inner) {
   try {
     networkId = UUID.randomUUID().toString()
@@ -45,16 +14,11 @@ pipeline {
 		DOCKERHUB_CREDENTIALS=credentials('dockerhub')
 	}
     stages {
-        // stage("Prepare build image") {
-        //     steps {
-        //         sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/petclinic-demo ."
-        //     }
-        // }
-		// stage('Login') {
-		// 	steps {
-		// 		sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-		// 	}
-		// }
+        stage("Build image") {
+            steps {
+                sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/petclinic-demo ."
+            }
+        }
         stage("Test") {
 			agent any
 			steps {
@@ -71,10 +35,19 @@ pipeline {
 							}
             			}
           			}
-
 				}
 			}
     	}
+		stage('Login to Docker hub') {
+			steps {
+				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+			}
+		}
+		stage('Push') {
+			steps {
+				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/petclinic-demo'
+			}
+		}
 	}
 }
 
