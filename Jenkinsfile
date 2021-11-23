@@ -50,11 +50,11 @@ pipeline {
         //         sh "docker build -t $DOCKERHUB_CREDENTIALS_USR/petclinic-demo ."
         //     }
         // }
-		stage('Login') {
-			steps {
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
+		// stage('Login') {
+		// 	steps {
+		// 		sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+		// 	}
+		// }
         stage("Test") {
 			agent any
 			steps {
@@ -62,15 +62,24 @@ pipeline {
 					def petclinic = docker.image("$DOCKERHUB_CREDENTIALS_USR/petclinic-demo")
 					def tester = docker.image("curlimage/curl")
 
+					// withDockerNetwork{ n ->
+            		// 	petclinic.withRun("--network ${n} --name petclinic") { c ->
+              		// 		tester.inside("--network ${n}) {
+					// 			echo 'curl request inside container'
+					// 			sh 'apt-get install curl'
+					// 			sh 'curl http://petclinic:8080'
+					// 	  	} 
+					// 	}
+					// }
+
 					withDockerNetwork{ n ->
-            			petclinic.withRun("--network ${n} --name petclinic") { c ->
-              				tester.inside("--network ${n}) {
-								echo 'curl request inside container'
-								sh 'apt-get install curl'
-								sh 'curl http://petclinic:8080'
-						  	} 
-						}
-					}
+						petclinic.withRun("--network ${n} --name petclinic") { c ->
+							tester.inside("--network ${n}") {
+								sh "curl http://petclinic:8080"
+							}
+            			}
+          			}
+
 				}
 			}
     	}
