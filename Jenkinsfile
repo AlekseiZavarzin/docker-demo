@@ -60,7 +60,7 @@ pipeline {
 			steps {
 				script {
 					def petclinic = docker.image("$DOCKERHUB_CREDENTIALS_USR/petclinic-demo")
-					def tester = docker.image("curlimage/curl")
+					def tester = docker.image("curlimages/curl")
 
 					// withDockerNetwork{ n ->
             		// 	petclinic.withRun("--network ${n} --name petclinic") { c ->
