@@ -60,19 +60,21 @@ pipeline {
 			steps {
 				script {
 					def petclinic = docker.image("$DOCKERHUB_CREDENTIALS_USR/petclinic-demo")
-					def tester = docker.image("ubuntu")
+					def tester = docker.image("curlimage/curl")
 
 					withDockerNetwork{ n ->
             			petclinic.withRun("--network ${n} --name petclinic") { c ->
-              			tester.inside("--network ${n}") {
-							  sh "apt-get install curl"
-							  sh "curl http://petclinic:8080"
-						  } 
+              				tester.inside("--network ${n}) {
+								echo 'curl request inside container'
+								sh 'apt-get install curl'
+								sh 'curl http://petclinic:8080'
+						  	} 
+						}
 					}
 				}
 			}
-		}
-    }
+    	}
+	}
 }
 
 post {
