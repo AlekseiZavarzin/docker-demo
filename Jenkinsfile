@@ -66,7 +66,7 @@ pipeline {
 						petclinic.withRun("--network ${n} --name petclinic") { c ->
 							tester.inside("--network ${n} -u root:root") {
 								sh "apt-get update"
-								sh "apt-get install curl"
+								sh "apt-get install -y curl"
 								sh "curl http://petclinic:8080"
 							}
             			}
