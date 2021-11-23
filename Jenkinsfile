@@ -74,8 +74,8 @@ pipeline {
 
 					withDockerNetwork{ n ->
 						petclinic.withRun("--network ${n} --name petclinic") { c ->
-							tester.withRun("--network ${n} -L -v http://petclinic:8080") { d ->
-								echo "curl http://petclinic:8080"
+							tester.withRun("--network ${n}") { d ->
+								sh "curl http://petclinic:8080"
 							}
             			}
           			}
