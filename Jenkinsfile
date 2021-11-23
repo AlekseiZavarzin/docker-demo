@@ -67,7 +67,6 @@ pipeline {
             agent {
                 docker {
                     image "$DOCKERHUB_CREDENTIALS_USR/petclinic-demo"
-                    label "build-image"
                 }
             }
             steps {
