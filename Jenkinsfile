@@ -74,6 +74,7 @@ pipeline {
                 sh "docker ps -a"
             }
         }
+	}
 
 post {
 	always {
