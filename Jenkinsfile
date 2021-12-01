@@ -32,10 +32,10 @@ pipeline {
 			    	   	petclinic.withRun("--network ${n} --name petclinic") { c ->
 				            tester.inside("--network ${n} -u root:root") {
 				                sh "sleep 60"
-								sh "curl -S -f -I -o good-response.txt  http://petclinic:8080"
-								sh "curl -S -f -I -o bad-response.txt  http://petclinic:8080/home"
-								archiveArtifacts artifacts: '*-response.txt'
-				            }
+								sh "curl -S -f -I -o good-response.txt  http://petclinic:8080 "
+								stash includes: 'good-response.txt', name: 'artifacts'
+								// archiveArtifacts artifacts: '*-response.txt'
+							}
 						}
           			}
 				}
@@ -58,7 +58,8 @@ pipeline {
 	post {
 		always {
 			sh 'docker logout'
-// 			archiveArtifacts artifacts: 'response.txt'
+			unstash 'artifacts'
+			archiveArtifacts artifacts: 'response.txt'
 		}
 	}
 }
