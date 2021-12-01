@@ -59,7 +59,7 @@ pipeline {
 		always {
 			sh 'docker logout'
 			unstash 'artifacts'
-			archiveArtifacts artifacts: 'response.txt'
+			archiveArtifacts artifacts: 'good-response.txt'
 		}
 	}
 }
